@@ -148,10 +148,7 @@ function brutForce(adjacencyMatrix) {
 
 function greedy(adjacencyMatrix) {
     let crawlPath = [0, 1];
-    //выбираются первые две вершины обхода как минимальный элемент матрицы
-    
-    
-
+    let unvisitedVertex = Array(adjacencyMatrix.length).fill().map((e, i) => i);
     for (let i = 0; i < adjacencyMatrix.length; i++) {
         for (let j = 0; j < adjacencyMatrix.length, i != j; j++) {
             if (adjacencyMatrix[i][j] < adjacencyMatrix[crawlPath[0]][crawlPath[1]]) {
@@ -159,38 +156,37 @@ function greedy(adjacencyMatrix) {
             }
         }
     }
-
-    let min;
-    let minVertex;
-    let last;
-
+    for (let i = 0; i < unvisitedVertex.length; i++) {
+        if (crawlPath[0] == unvisitedVertex[i] || crawlPath[1] == unvisitedVertex[i]) {
+            unvisitedVertex.splice(i, 1);
+        }
+    }
+    let min = 9999999999;
+    let minVertex = 1;
+    let last = crawlPath[crawlPath.length - 1];
     while (crawlPath.length < adjacencyMatrix.length) {
-        
         last = crawlPath[crawlPath.length - 1];
-        
         min = 9999999999;
         minVertex = 1;
-
-        //проходим все вершины в цикле
-        for (let i = 0; i < adjacencyMatrix.length; i++) {
-            //проходим все вершины пути
-            for (let j = 0; j < crawlPath.length; j++) {
-                //смотрим, есть вершина, которую мы проходим среди посещённых
-                if (i != crawlPath[j] && adjacencyMatrix[last][i] < min) {
-                    //почему-то тут выбирается посещённая вершина (????)
-                    console.log("i: " + i + " crawlPath: " + crawlPath);
-                    min = adjacencyMatrix[last][i];
-                    minVertex = i;
-                }
+        for (let i = 0; i < unvisitedVertex.length; i++) {
+                        if (adjacencyMatrix[last][unvisitedVertex[i]] < min && last != unvisitedVertex[i]) {
+                //console.log(adjacencyMatrix[last][unvisitedVertex[i]] + " < " + min);
+                min = adjacencyMatrix[last][unvisitedVertex[i]];
+                minVertex = unvisitedVertex[i];
             }
         }
         crawlPath.push(minVertex);
-        console.log(crawlPath);
-        //console.log(travelLength(crawlPath, adjacencyMatrix));
+        for (let i = 0; i < unvisitedVertex.length; i++) {
+            if (unvisitedVertex[i] == minVertex) {
+                unvisitedVertex.splice(i, 1);
+            }
+        }
+        last = minVertex;
     }
+    return crawlPath;
 }
 
-greedy(adjacencyMatrix);
+console.log(greedy(adjacencyMatrix) + " имеет длину " + travelLength(greedy(adjacencyMatrix), adjacencyMatrix));
 
 
 let iterations = Array(factorial(adjacencyMatrix.length)).fill().map((e, i) => i);
