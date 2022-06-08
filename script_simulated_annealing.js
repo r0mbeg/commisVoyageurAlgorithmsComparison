@@ -154,7 +154,7 @@ new Chart(document.getElementById("myChart"), {
       datasets: [{ 
           data: simulatedAnnealingRes1.pathLength,
           label: "Simulated Annealing",
-          borderColor: "#3e95cd",
+          borderColor: "rgba(216, 27, 96, 1)",
           fill: false,
           cubicInterpolationMode: 'monotone'
         }
@@ -165,6 +165,22 @@ new Chart(document.getElementById("myChart"), {
       title: {
         display: true,
         text: 'Comparison of algorithms for finding the shortest path in a graph'
+      },
+      scales: {
+        x: {
+            ticks: {
+                font: {
+                    size: 20,
+                }
+            }
+        },
+        y: {
+          ticks: {
+              font: {
+                  size: 20,
+              }
+          }
       }
+    }
     }
   });

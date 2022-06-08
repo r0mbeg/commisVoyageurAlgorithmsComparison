@@ -47,6 +47,10 @@ function brutForce(adjacencyMatrix) {
     let crawlPath = [];
     let pathLength = [];
     let minPathLength = [];
+
+    let shortestPathNumbers = [];
+    let minPathLengths = []; 
+
     //заполняем массив числами от 0 до n-1
     let initialArray = Array(adjacencyMatrix.length).fill().map((e, i) => i);
     crawlPath[0] = initialArray.slice();
@@ -60,6 +64,10 @@ function brutForce(adjacencyMatrix) {
         if (pathLength[shortestPathNumber] > pathLength[i]) {
             shortestPathNumber = i;
             minPathLength[i] = pathLength[i];
+
+            shortestPathNumbers.push(i);
+            minPathLengths.push(pathLength[i]);
+
         } else {
             minPathLength[i] = pathLength[shortestPathNumber];
         }
@@ -68,58 +76,69 @@ function brutForce(adjacencyMatrix) {
     return {
         crawlPath: crawlPath,
         pathLength: pathLength,
-        minPathLength: minPathLength
+        minPathLength: minPathLength,
+        shortestPathNumbers: shortestPathNumbers,
+        minPathLengths: minPathLengths
     };
 }
 
-function greedy(adjacencyMatrix) {
-    let crawlPath = [0, 1];
-    let unvisitedVertex = Array(adjacencyMatrix.length).fill().map((e, i) => i);
-    for (let i = 0; i < adjacencyMatrix.length; i++) {
-        for (let j = 0; j < adjacencyMatrix.length, i != j; j++) {
-            if (adjacencyMatrix[i][j] < adjacencyMatrix[crawlPath[0]][crawlPath[1]]) {
-                crawlPath = [i, j];
-            }
-        }
-    }
-    for (let i = 0; i < unvisitedVertex.length; i++) {
-        if (crawlPath[0] == unvisitedVertex[i] || crawlPath[1] == unvisitedVertex[i]) {
-            unvisitedVertex.splice(i, 1);
-        }
-    }
-    let min = 9999999999;
-    let minVertex = 1;
-    let last = crawlPath[crawlPath.length - 1];
-    while (crawlPath.length < adjacencyMatrix.length) {
-        last = crawlPath[crawlPath.length - 1];
-        min = 9999999999;
-        minVertex = 1;
-        for (let i = 0; i < unvisitedVertex.length; i++) {
-                        if (adjacencyMatrix[last][unvisitedVertex[i]] < min && last != unvisitedVertex[i]) {
-                //console.log(adjacencyMatrix[last][unvisitedVertex[i]] + " < " + min);
-                min = adjacencyMatrix[last][unvisitedVertex[i]];
-                minVertex = unvisitedVertex[i];
-            }
-        }
-        crawlPath.push(minVertex);
-        for (let i = 0; i < unvisitedVertex.length; i++) {
-            if (unvisitedVertex[i] == minVertex) {
-                unvisitedVertex.splice(i, 1);
-            }
-        }
-        last = minVertex;
-    }
-    return crawlPath;
-}
 
-let greedyResMin = brutForce(adjacencyMatrix).minPathLength;
 
+let brutForceRes = brutForce(adjacencyMatrix);
+
+let brutForceShortestPathNumbers = brutForceRes.shortestPathNumbers;
+let brutForceMinPathLengths = brutForceRes.minPathLengths;
+
+
+new Chart(document.getElementById("myChart"), {
+    type: 'line',
+    data: {
+      labels: brutForceShortestPathNumbers,
+      datasets: [{ 
+          data: brutForceMinPathLengths,
+          label: "BrutForce",
+          borderColor: "#3e95cd",
+          fill: false,
+          //cubicInterpolationMode: 'monotone'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      title: {
+        font: {
+          size: 20,
+        },
+        display: true,
+        text: 'Comparison of algorithms for finding the shortest path in a graph'
+      },
+      scales: {
+        x: {
+            ticks: {
+                font: {
+                    size: 20,
+                }
+            }
+        },
+        y: {
+          ticks: {
+              font: {
+                  size: 20,
+              }
+          }
+      }
+    }
+    }
+  });
+
+
+/*
 new Chart(document.getElementById("myChart"), {
     type: 'line',
     data: {
       labels: Array(30000).fill().map((e, i) => i),
       datasets: [{ 
-          data: greedyResMin.slice(0,30000),
+          data: brutForceResMin.slice(0,30000),
           label: "BrutForce",
           borderColor: "#3e95cd",
           fill: false,
@@ -135,3 +154,4 @@ new Chart(document.getElementById("myChart"), {
       }
     }
   });
+  */
